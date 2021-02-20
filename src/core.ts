@@ -59,13 +59,13 @@ export const searchShops: (query : ShopsQuery) => Promise<ShopsResult[] | Error>
 
 
 export const searchShopsByCoord: (
-  lat:number, lon:number, query : ShopsQuery) => 
-    Promise<ShopsResult[] | Error> = async (lat, lon, query) => {
+  lat:number, lon:number, categories : string[]) => 
+    Promise<ShopsResult[] | Error> = async (lat, lon, categories) => {
   const RADIUS = 2000;
   
   const body = `
   [out:json];
-  (${query.categories.map(
+  (${categories.map(
       category => `node [shop=${category}] 
                     (around: ${RADIUS},${lat},${lon});`
     ).join('\n')}
