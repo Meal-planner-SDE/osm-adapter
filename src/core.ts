@@ -62,7 +62,7 @@ export const searchShopsByCoord: (
   lat:number, lon:number, categories : string[]) => 
     Promise<ShopsResult[] | Error> = async (lat, lon, categories) => {
   const RADIUS = 2000;
-  
+  console.log(categories);
   const body = `
   [out:json];
   (${categories.map(
