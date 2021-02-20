@@ -11,12 +11,13 @@
 
 import express from 'express';
 import {
-  getArea, getShops
+  getArea, getShops, getShopsByCoord
 } from './controller';
 
 const router = express.Router();
 
 router.get('/area', getArea);
-router.post('/shops', getShops)
+router.post('/shops', getShops) // not used atm
+router.post('/shopsByCoord', getShopsByCoord)
 
 export default router;

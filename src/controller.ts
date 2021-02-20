@@ -13,9 +13,11 @@ import { Request, Response } from 'express';
 
 import {
   searchArea,
-  searchShops
+  searchShops,
+  searchShopsByCoord
 } from './core';
 import {
+  getNumberParameterFromRequest,
   getParameterFromRequest,
 } from './helper';
 
@@ -27,4 +29,15 @@ export const getArea = async (req: Request, res: Response) => {
 
 export const getShops = async (req: Request, res:Response) => {
   res.send(await searchShops(req.body));
+}
+
+export const getShopsByCoord = async (req: Request, res:Response) => {
+  const lat = getNumberParameterFromRequest(req, 'lat');
+  const lon = getNumberParameterFromRequest(req, 'lon');
+  if (lat !== false && lon !== false){
+    res.send(await searchShopsByCoord(lat, lon, req.body));
+  } else {
+    res.status(400);
+    res.send({"error": "Invalid lat or lon parameters."});
+  }
 }

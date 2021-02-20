@@ -45,16 +45,38 @@ export const searchArea: (query : string) => Promise<Area | Error> = async (quer
 };
 
 export const searchShops: (query : ShopsQuery) => Promise<ShopsResult[] | Error> = async (query) => {
-  try {
-    const body = `
-    [out:json];
-    (${query.categories.map(
-        category => `node [shop=${category}] 
-                      (${query.area.s},${query.area.w},${query.area.n},${query.area.e});`
-      ).join('\n')}
-    );
-    out;
+  const body = `
+  [out:json];
+  (${query.categories.map(
+      category => `node [shop=${category}] 
+                    (${query.area.s},${query.area.w},${query.area.n},${query.area.e});`
+    ).join('\n')}
+  );
+  out;
+  `
+  return findShops(body);
+};
+
+
+export const searchShopsByCoord: (
+  lat:number, lon:number, query : ShopsQuery) => 
+    Promise<ShopsResult[] | Error> = async (lat, lon, query) => {
+  const RADIUS = 2000;
+  
+  const body = `
+  [out:json];
+  (${query.categories.map(
+      category => `node [shop=${category}] 
+                    (around: ${RADIUS},${lat},${lon});`
+    ).join('\n')}
+  );
+  out;
 `
+  return findShops(body);
+};
+
+const findShops: (body: string) => Promise<ShopsResult[] | Error> = async (body) => {
+  try{
     const query_results = await axios.post<{elements: ShopRaw[]}>(`${config.OVERPASS_API_ENDPOINT}/search`, body,
     {
       headers: { 
@@ -77,4 +99,4 @@ export const searchShops: (query : ShopsQuery) => Promise<ShopsResult[] | Error>
       error: e.toString(),
     };
   }
-};
+}
