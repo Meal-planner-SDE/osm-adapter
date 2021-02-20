@@ -50,7 +50,34 @@ export const getNumberFromRequest: (req: Request, param: string) => number | fal
   }
 
   try {
-    return parseInt(value);
+    const result = parseInt(value);
+    return isNaN(result) ? false : result;
+  } catch (e) {
+    console.error(`Error extracting parameter ${param}:`, e);
+    return false;
+  }
+};
+
+/**
+ * Parse a number parameter from a query
+ * @param req The request (as given in the controller)
+ * @param param The name of the number parameter to get
+ * @return the value of the parameter if the parameter is
+ * correct and available, false otherwise
+ */
+export const getFloatFromRequest: (req: Request, param: string) => number | false = (
+  req,
+  param
+) => {
+  let value = req.query[param];
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  try {
+    const result = parseFloat(value);
+    return isNaN(result) ? false : result;
   } catch (e) {
     console.error(`Error extracting parameter ${param}:`, e);
     return false;
