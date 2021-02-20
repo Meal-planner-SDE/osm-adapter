@@ -17,7 +17,7 @@ import {
   searchShopsByCoord
 } from './core';
 import {
-  getNumberParameterFromRequest,
+  getNumberParameter,
   getParameterFromRequest,
 } from './helper';
 
@@ -32,8 +32,8 @@ export const getShops = async (req: Request, res:Response) => {
 }
 
 export const getShopsByCoord = async (req: Request, res:Response) => {
-  const lat = getNumberParameterFromRequest(req, 'lat');
-  const lon = getNumberParameterFromRequest(req, 'lon');
+  const lat = getNumberParameter(req, 'lat');
+  const lon = getNumberParameter(req, 'lon');
   if (lat !== false && lon !== false){
     res.send(await searchShopsByCoord(lat, lon, req.body));
   } else {
