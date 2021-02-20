@@ -72,6 +72,7 @@ export const searchShopsByCoord: (
   );
   out;
 `
+  console.log(body);
   return findShops(body);
 };
 
@@ -85,7 +86,8 @@ const findShops: (body: string) => Promise<ShopsResult[] | Error> = async (body)
       }
     });
     let result = {} as {[key: string]: ShopsResult};
-
+    console.log('results:')
+    console.log(query_results.data.elements)
     for (let shop_res of query_results.data.elements){
       if (!(shop_res.tags.shop in result)){
         result[shop_res.tags.shop] = {category: shop_res.tags.shop, shops: []} as ShopsResult;
