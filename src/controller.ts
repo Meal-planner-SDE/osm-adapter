@@ -21,23 +21,45 @@ import {
   getParameterFromRequest,
 } from './helper';
 
+import {
+  isError
+} from './types'
+
 export const getArea = async (req: Request, res: Response) => {
   const query = getParameterFromRequest(req, 'address');
-  res.send(await searchArea(query || ""));
+  if (!query){
+    res.status(400);
+    res.send({'error': 'invalid value for parameter address'})
+  } else {
+    let area = await searchArea(query);
+    if(isError(area)){
+      res.status(400);
+    }
+    res.send(area);
+  }
 };
 
 
 export const getShops = async (req: Request, res:Response) => {
-  res.send(await searchShops(req.body));
+  let shops = await searchShops(req.body);
+  if(isError(shops)){
+    res.status(400);
+  }
+  res.send(shops);
 }
 
 export const getShopsByCoord = async (req: Request, res:Response) => {
   const lat = getFloatFromRequest(req, 'lat');
   const lon = getFloatFromRequest(req, 'lon');
-  if (lat !== false && lon !== false){
-    res.send(await searchShopsByCoord(lat, lon, req.body));
-  } else {
+
+  if (lat === false || lon === false){
     res.status(400);
-    res.send({"error": "Invalid lat or lon parameters."});
+    res.send({"error": "lat and lon must be valid floats."});
+  } else {
+    let shops = await searchShopsByCoord(lat, lon, req.body);
+    if(isError(shops)){
+      res.status(400);
+    }
+    res.send(shops);
   }
 }
