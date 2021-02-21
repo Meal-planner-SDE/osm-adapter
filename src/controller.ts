@@ -27,7 +27,7 @@ import {
 
 export const getArea = async (req: Request, res: Response) => {
   const query = getParameterFromRequest(req, 'address');
-  if (!query){
+  if (query === undefined){
     res.status(400);
     res.send({'error': 'invalid value for parameter address'})
   } else {
@@ -52,7 +52,7 @@ export const getShopsByCoord = async (req: Request, res:Response) => {
   const lat = getFloatFromRequest(req, 'lat');
   const lon = getFloatFromRequest(req, 'lon');
 
-  if (lat === false || lon === false){
+  if (isNaN(lat) || isNaN(lon)){
     res.status(400);
     res.send({"error": "lat and lon must be valid floats."});
   } else {

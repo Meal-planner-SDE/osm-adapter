@@ -65,22 +65,22 @@ export const getNumberFromRequest: (req: Request, param: string) => number | fal
  * @return the value of the parameter if the parameter is
  * correct and available, false otherwise
  */
-export const getFloatFromRequest: (req: Request, param: string) => number | false = (
+export const getFloatFromRequest: (req: Request, param: string) => number = (
   req,
   param
 ) => {
   let value = req.query[param];
 
   if (typeof value !== 'string') {
-    return false;
+    return NaN;
   }
 
   try {
     const result = parseFloat(value);
-    return isNaN(result) ? false : result;
+    return result;
   } catch (e) {
     console.error(`Error extracting parameter ${param}:`, e);
-    return false;
+    return NaN;
   }
 };
 
@@ -113,17 +113,12 @@ export const getIdParameter: (req: Request) => number | false = (
  * @return the value of the parameter if the parameter is
  * correct and available, false otherwise
  */
-export const getParameterFromRequest: (req: Request, param: string) => string | false = (
+export const getParameterFromRequest: (req: Request, param: string) => string = (
   req,
   param
 ) => {
   let value = req.query[param] as string;
-  try {
-    return value === undefined? "" : value;
-  } catch (e) {
-    console.error(`Error extracting parameter ${param}:`, e);
-    return false;
-  }
+  return value;
 };
 
 
